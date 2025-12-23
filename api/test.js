@@ -43,10 +43,10 @@ export default function handler(req, res) {
       
       const decoded = await admin.auth().verifyIdToken(token);
 
-      if (!decoded.email_verified) {
-        return res.status(403).json({ error: 'User not verified' });
+      if (decoded.firebase?.sign_in_provider !== 'phone') {
+        return res.status(403).json({ error: 'User not verified via phone' });
       }
-
+      
       return res.status(200).json({
           ok: true,
           message: 'user verified',
