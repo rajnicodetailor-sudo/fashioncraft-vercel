@@ -32,7 +32,7 @@ export default function handler(req, res) {
         return res.status(200).json({
           ok: true,
           message: 'API working',
-          geminiKey: process.env.FIREBASE_SERVICE_ACCOUNT,
+          geminiKey: JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT),
         });
       }
 
@@ -44,13 +44,13 @@ export default function handler(req, res) {
       
       initFirebase();
 
-      
       const authHeader = req.headers.authorization;
       if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
+      
       const token = authHeader.split(' ')[1];
+       Console.log('Firebase init completed');
       const decoded = await admin.auth().verifyIdToken(token);
 
       if (!decoded.email_verified) {
