@@ -26,17 +26,7 @@ function initFirebase() {
 
 export default function handler(req, res) {
   cors(req, res, async () => {
-    try {
-      
-      if (req.method === 'GET') {
-        return res.status(200).json({
-          ok: true,
-          message: 'API working',
-          geminiKey: JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT),
-        });
-      }
-
-      
+    try {      
       if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
       }
@@ -57,6 +47,10 @@ export default function handler(req, res) {
         return res.status(403).json({ error: 'User not verified' });
       }
 
+      return res.status(200).json({
+          ok: true,
+          message: 'user verified',
+        });
       
       const { modelImage, productImage } = req.body || {};
       if (!modelImage || !productImage) {
