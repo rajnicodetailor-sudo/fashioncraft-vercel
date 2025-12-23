@@ -1,11 +1,6 @@
-{
-  "name": "fashion-vercel",
-  "version": "1.0.0",
-  "dependencies": {
-    "firebase-admin": "^11.2.0",
-    "node-fetch": "^3.3.2",
-    "multer": "^1.4.5",
-    "cors": "^2.8.5"
-  }
+"dependencies": {
+  "firebase-admin": "^13.6.0",
+  "node-fetch": "^3.3.2",
+  "multer": "^2.0.2",
+  "cors": "^2.8.5"
 }
-
