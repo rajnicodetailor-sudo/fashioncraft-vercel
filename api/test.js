@@ -1,36 +1,43 @@
-import Cors from "cors";
+import * as admin from 'firebase-admin';
+import Cors from 'cors';
 
-// Initialize CORS
-const cors = Cors({
-  methods: ["GET", "POST", "OPTIONS"]
-});
+const cors = Cors({ methods: ['POST'] });
 
-// Helper to run middleware
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) reject(result);
-      else resolve(result);
-    });
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    }),
   });
 }
 
 export default async function handler(req, res) {
-  await runMiddleware(req, res, cors);
+  await new Promise((r) => cors(req, res, r));
 
-  // Default response if path is "/"
-  if (req.url === "/") {
-    return res.status(200).json({ message: "Welcome to Vercel Test API" });
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    // 🔐 Auth
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = await admin.auth().verifyIdToken(token);
+
+    if (!decoded.email_verified) {
+      return res.status(403).json({ error: 'User not verified' });
+    }
+
+    return res.status(200).json({ error: 'User verified' });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: err.message });
   }
-
-  // Handle /api/test specifically
-  if (req.url.startsWith("/api/test")) {
-    return res.status(200).json({
-      status: "success",
-      data: "This is the test response from /api/test"
-    });
-  }
-
-  // Fallback for unknown paths
-  return res.status(404).json({ error: "Route not found" });
 }
