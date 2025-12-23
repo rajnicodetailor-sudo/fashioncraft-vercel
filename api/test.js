@@ -78,19 +78,9 @@ export default function handler(req, res) {
       );
 
       const json = await geminiResp.json();
-
-      const image =
-        json?.candidates?.[0]?.content?.parts
-          ?.find(p => p.inline_data)?.inline_data?.data;
-
-      if (!image) {
-        return res.status(500).json({
-          error: 'Image generation failed',
+      return res.status(200).json({
           geminiResponse: json,
         });
-      }
-
-      return res.status(200).json({ image });
 
     } catch (err) {
       console.error(err);
