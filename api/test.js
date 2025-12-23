@@ -3,15 +3,16 @@ import Cors from 'cors';
 
 const cors = Cors({ methods: ['POST'] });
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    }),
-  });
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
+console.log('ENV keys:', Object.keys(process.env));
+
+if (!serviceAccount) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT env missing');
 }
+
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(serviceAccount)),
+});
 
 export default async function handler(req, res) {
   await new Promise((r) => cors(req, res, r));
