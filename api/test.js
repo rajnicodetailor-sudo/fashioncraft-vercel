@@ -1,44 +1,52 @@
 import * as admin from 'firebase-admin';
 import Cors from 'cors';
 
-const cors = Cors({ methods: ['POST'] });
+const cors = Cors({ methods: ['POST', 'GET'] });
 
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
-console.log('ENV keys:', Object.keys(process.env));
+export default function handler(req, res) {
+  cors(req, res, async () => {
+    try {
+      // DEBUG: env keys
+      const envKeys = Object.keys(process.env);
 
-if (!serviceAccount) {
-  throw new Error('FIREBASE_SERVICE_ACCOUNT env missing');
-}
+      const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(serviceAccount)),
-});
+      if (!serviceAccount) {
+        return res.status(500).json({
+          ok: false,
+          error: 'FIREBASE_SERVICE_ACCOUNT env missing',
+          envKeys,
+        });
+      }
 
-export default async function handler(req, res) {
-  await new Promise((r) => cors(req, res, r));
+      let parsed;
+      try {
+        parsed = JSON.parse(serviceAccount);
+      } catch (e) {
+        return res.status(500).json({
+          ok: false,
+          error: 'Invalid FIREBASE_SERVICE_ACCOUNT JSON',
+          message: e.message,
+        });
+      }
 
-  try {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' });
+      if (!admin.apps.length) {
+        admin.initializeApp({
+          credential: admin.credential.cert(parsed),
+        });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        message: 'Firebase initialized successfully',
+        projectId: parsed.project_id,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        ok: false,
+        error: error.message,
+        stack: error.stack,
+      });
     }
-
-    // 🔐 Auth
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    const decoded = await admin.auth().verifyIdToken(token);
-
-    if (!decoded.email_verified) {
-      return res.status(403).json({ error: 'User not verified' });
-    }
-
-    return res.status(200).json({ error: 'User verified' });
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: err.message });
-  }
+  });
 }
