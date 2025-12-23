@@ -32,7 +32,7 @@ export default function handler(req, res) {
         return res.status(200).json({
           ok: true,
           message: 'API working',
-          geminiKey: !!process.env.GEMINI_KEY,
+          geminiKey: process.env.FIREBASE_SERVICE_ACCOUNT,
         });
       }
 
