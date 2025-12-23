@@ -41,7 +41,7 @@ export default function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
       }
 
-      
+      Console.log('Firebase init satrted');
       initFirebase();
 
       const authHeader = req.headers.authorization;
