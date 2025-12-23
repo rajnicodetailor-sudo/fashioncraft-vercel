@@ -33,30 +33,19 @@ export default function handler(req, res) {
         return res.status(200).json({
           ok: true,
           message: 'API working',
-          firebaseEnv: {
-            project: !!process.env.FIREBASE_PROJECT_ID,
-            email: !!process.env.FIREBASE_CLIENT_EMAIL,
-            key: !!process.env.FIREBASE_PRIVATE_KEY,
-          },
           geminiKey: !!process.env.GEMINI_KEY,
         });
       }
 
-      /* =========================
-         ❌ METHOD CHECK
-      ========================== */
+      
       if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
       }
 
-      /* =========================
-         🔥 FIREBASE INIT
-      ========================== */
+      
       initFirebase();
 
-      /* =========================
-         🔐 AUTH
-      ========================== */
+      
       const authHeader = req.headers.authorization;
       if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Unauthorized' });
@@ -69,17 +58,13 @@ export default function handler(req, res) {
         return res.status(403).json({ error: 'User not verified' });
       }
 
-      /* =========================
-         📸 BODY VALIDATION
-      ========================== */
+      
       const { modelImage, productImage } = req.body || {};
       if (!modelImage || !productImage) {
         return res.status(400).json({ error: 'Images required' });
       }
 
-      /* =========================
-         🤖 GEMINI CALL
-      ========================== */
+      
       const geminiResp = await fetch(
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
         {
