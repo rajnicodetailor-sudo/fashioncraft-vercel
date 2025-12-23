@@ -31,7 +31,8 @@ export default function handler(req, res) {
         //return res.status(405).json({ error: 'Method not allowed' });
       }
 
-      Console.log('Firebase init satrted');
+      console.log('Firebase init satrted');
+      
       initFirebase();
 
       const authHeader = req.headers.authorization;
@@ -40,7 +41,8 @@ export default function handler(req, res) {
       }
       
       const token = authHeader.split(' ')[1];
-       Console.log('Firebase init completed');
+      console.log('Firebase init completed');
+      
       const decoded = await admin.auth().verifyIdToken(token);
 
       if (!decoded.email_verified) {
