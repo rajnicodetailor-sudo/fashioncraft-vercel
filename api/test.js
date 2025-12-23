@@ -28,10 +28,8 @@ export default function handler(req, res) {
   cors(req, res, async () => {
     try {      
       if (req.method !== 'POST') {
-        //return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({ error: 'Method not allowed' });
       }
-
-      console.log('Firebase init satrted');
       
       initFirebase();
 
@@ -41,7 +39,7 @@ export default function handler(req, res) {
       }
       
       const token = authHeader.split(' ')[1];
-      console.log('Firebase init completed');
+      console.log(token);
       
       const decoded = await admin.auth().verifyIdToken(token);
 
