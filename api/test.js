@@ -65,19 +65,7 @@ export default function handler(req, res) {
               parts: [
                 {
                   text:
-`You are creating a UGC-style marketing image.
-
-Image 1 is the reference model.
-Do NOT change the model’s face, facial structure, skin tone, age, gender, or identity.
-
-Image 2 is the product/item to be featured.
-Place it naturally like real user-generated content.
-
-Rules:
-- Preserve exact facial identity
-- No text, logos, watermarks
-- Natural lighting
-- Real smartphone UGC look`
+`You are creating a UGC-style marketing image.\n\nImage 1 is the reference model.\nDo NOT change the model’s face, facial structure, skin tone, age, gender, or identity in any way.\nThe face must remain exactly the same as Image 1.\n\nImage 2 is the product/item to be featured.\nPlace this item naturally in the scene so it looks like real user-generated content.\n\nYou MAY change:\n- Pose and body posture\n- Outfit and accessories\n- Background and environment\n- Lighting, colors, and camera angle\n- Hand position and how the item is held\n\nYou MUST:\n- Preserve the exact facial identity from Image 1\n- Ensure the face looks realistic and unaltered\n- Make the final image look like a genuine smartphone UGC photo\n- Avoid over-editing, filters, or artificial effects\n- DO NOT add any text, captions, logos, brand names, watermarks, stickers, or symbols on the image\n\nStyle:\n- Natural lighting\n- Casual, real-life setting\n- Authentic social media UGC aesthetic\n- Not studio-like or stock-photo style\n\nOutput requirements:\n- Generate a single high-quality image\n- The image must contain NO visible text of any kind`
                 },
                 { inline_data: { mime_type: 'image/jpeg', data: modelImage } },
                 { inline_data: { mime_type: 'image/jpeg', data: productImage } },
