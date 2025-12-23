@@ -28,7 +28,7 @@ export default function handler(req, res) {
   cors(req, res, async () => {
     try {      
       if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        //return res.status(405).json({ error: 'Method not allowed' });
       }
 
       Console.log('Firebase init satrted');
