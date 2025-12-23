@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
 import Cors from 'cors';
-import fetch from 'node-fetch';
 
 const cors = Cors({ methods: ['POST', 'GET'] });
 
