@@ -78,6 +78,8 @@ export default function handler(req, res) {
       );
 
       const json = await geminiResp.json();
+
+      console.log(`success------${json}`);
       return res.status(200).json({
           geminiResponse: json,
         });
