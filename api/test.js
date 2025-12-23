@@ -47,17 +47,11 @@ export default function handler(req, res) {
         return res.status(403).json({ error: 'User not verified via phone' });
       }
       
-      return res.status(200).json({
-          ok: true,
-          message: 'user verified',
-        });
-      
       const { modelImage, productImage } = req.body || {};
       if (!modelImage || !productImage) {
         return res.status(400).json({ error: 'Images required' });
       }
 
-      
       const geminiResp = await fetch(
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
         {
