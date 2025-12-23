@@ -38,9 +38,7 @@ export default function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
       
-      const token = authHeader.split(' ')[1];
-      console.log(token);
-      
+      const token = authHeader.split(' ')[1];      
       const decoded = await admin.auth().verifyIdToken(token);
 
       if (decoded.firebase?.sign_in_provider !== 'phone') {
