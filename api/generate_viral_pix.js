@@ -37,7 +37,8 @@ export default function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
       
-      const token = authHeader.split(' ')[1];      
+      const token = authHeader.split(' ')[1];   
+      console.log('$token');
       const decoded = await admin.auth().verifyIdToken(token);
 
       if (!decoded.email_verified) {
