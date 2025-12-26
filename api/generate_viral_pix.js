@@ -12,7 +12,7 @@ function initFirebase() {
     throw new Error('Firebase env missing');
   }
 
-  const parsed = JSON.parse(serviceAccount.replace(/\\n/g, '\n'));
+  const parsed = JSON.parse(serviceAccount);
 
   if (!parsed) {
     throw new Error('Parsed Failed');
