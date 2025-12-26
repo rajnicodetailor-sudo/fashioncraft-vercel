@@ -41,8 +41,8 @@ export default function handler(req, res) {
       console.log(token);
       const decoded = await admin.auth().verifyIdToken(token);
 
-      if (!decoded.email_verified) {
-        return res.status(403).json({ error: 'Email not verified' });
+      if (!decoded.email) {
+        return res.status(403).json({ error: 'Email not found in token' });
       }
       
       const { modelImage, promptText } = req.body || {};
