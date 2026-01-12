@@ -38,7 +38,6 @@ export default function handler(req, res) {
       }
       
       const token = authHeader.split(' ')[1];   
-      console.log(token);
       const decoded = await admin.auth().verifyIdToken(token);
 
       if (!decoded.email) {
